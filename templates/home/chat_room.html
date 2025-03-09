@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-4">
+    <div class="bg-white rounded-lg shadow-lg">
+        <!-- Chat Header -->
+        <div class="border-b p-4">
+            <h2 class="text-xl font-bold">Chat for {{ buy_request.listing.title }}</h2>
+            <p class="text-sm text-gray-600">
+                Price agreed: ₹{{ buy_request.proposed_price }}
+            </p>
+            
+            <!-- Add Confirmation Button for Sellers -->
+            {% if request.user.seller %}
+                {% if order_status == 'pending' %}
+                    <form action="{% url 'confirm_order' buy_request.id %}" method="POST" class="mt-4">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            Confirm Order and Mark as Completed
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="mt-4 p-4 bg-green-100 rounded-lg">
+                        <p class="text-green-800">
+                            Order has been confirmed and marked as completed.
+                            Status: {{ buy_request.order.get_status_display }}
+                        </p>
+                    </div>
+                {% endif %}
+            {% endif %}
+            
+            <!-- Show Order Status if exists -->
+            {% if buy_request.order %}
+            <div class="mt-2 p-2 {% if buy_request.order.status == 'completed' %}bg-green-100{% else %}bg-yellow-100{% endif %} rounded">
+                <p class="text-sm">
+                    Order Status: {{ buy_request.order.get_status_display }}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Messages Container -->
+        <div id="messages" class="h-96 overflow-y-auto p-4 space-y-4">
+            {% for message in messages %}
+                <div class="flex {% if message.sender == request.user %}justify-end{% endif %}">
+                    <div class="max-w-sm rounded-lg p-3 {% if message.sender == request.user %}bg-blue-100{% else %}bg-gray-100{% endif %}">
+                        <p class="text-sm">{{ message.content }}</p>
+                        <span class="text-xs text-gray-500">{{ message.timestamp|date:"g:i A" }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Message Input -->
+        <div class="border-t p-4">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-message-input" 
+                       class="flex-1 rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       placeholder="Type your message...">
+                <button type="submit" id="chat-message-submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Send
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const messagesDiv = document.querySelector('#messages');
+    const messageInput = document.querySelector('#chat-message-input');
+    const messageForm = document.querySelector('#chat-form');
+    const submitButton = document.querySelector('#chat-message-submit');
+
+    const buyRequestId = {{ buy_request.id }};
+    const senderId = {{ request.user.id }};
+    const receiverId = {{ other_user.id }};
+    
+    let chatSocket = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+
+    const roomId = {{ buy_request.id }};
+
+    function connectWebSocket() {
+        chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+        );
+
+        chatSocket.onopen = function(e) {
+            submitButton.disabled = false;
+        };
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            addMessage(data.message, data.sender_id === senderId, data.timestamp);
+        };
+
+        chatSocket.onclose = function(e) {
+            submitButton.disabled = true;
+            if (reconnectAttempts < maxReconnectAttempts) {
+                setTimeout(() => {
+                    reconnectAttempts++;
+                    connectWebSocket();
+                }, 1000 * Math.min(reconnectAttempts + 1, 5));
+            }
+        };
+
+        chatSocket.onerror = function(err) {
+            submitButton.disabled = true;
+        };
+    }
+
+    // Initialize the WebSocket connection
+    connectWebSocket();
+
+    function sendMessage(message) {
+        if (message && chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender_id': senderId,
+                'receiver_id': receiverId
+            }));
+            return true;
+        }
+        return false;
+    }
+
+    messageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        if (sendMessage(message)) {
+            messageInput.value = '';
+            messageInput.focus();
+        }
+    });
+
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            messageForm.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    function addMessage(message, isSender, timestamp) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = flex ${isSender ? 'justify-end' : ''};
+        messageDiv.innerHTML = 
+            <div class="max-w-sm rounded-lg p-3 ${isSender ? 'bg-blue-100' : 'bg-gray-100'}">
+                <p class="text-sm">${message}</p>
+                <span class="text-xs text-gray-500">${new Date(timestamp).toLocaleTimeString()}</span>
+            </div>
+        ;
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    window.onbeforeunload = function() {
+        if (chatSocket) {
+            chatSocket.close();
+        }
+    };
+</script>
+{% endblock %} 

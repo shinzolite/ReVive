@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}ReVive - Buyer Dashboard{% endblock %}
+<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet" />
+
+{% block content %}
+<div class="bg-orange-100 min-h-screen">
+  <div class="w-10/12 mx-auto py-8">
+    <!-- Top Row: Welcome and Inbox -->
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- Welcome Card -->
+      <div class="bg-no-repeat bg-red-200 border border-red-300 rounded-xl md:w-7/12 p-6" 
+           style="background-image: url('https://previews.dropbox.com/p/thumb/AAvyFru8elv-S19NMGkQcztLLpDd6Y6VVVMqKhwISfNEpqV59iR5sJaPD4VTrz8ExV7WU9ryYPIUW8Gk2JmEm03OLBE2zAeQ3i7sjFx80O-7skVlsmlm0qRT0n7z9t07jU_E9KafA9l4rz68MsaZPazbDKBdcvEEEQPPc3TmZDsIhes1U-Z0YsH0uc2RSqEb0b83A1GNRo86e-8TbEoNqyX0gxBG-14Tawn0sZWLo5Iv96X-x10kVauME-Mc9HGS5G4h_26P2oHhiZ3SEgj6jW0KlEnsh2H_yTego0grbhdcN1Yjd_rLpyHUt5XhXHJwoqyJ_ylwvZD9-dRLgi_fM_7j/p.png?fv_content=true&size_mode=5'); background-position: right center;">
+        <p class="text-5xl text-indigo-900">
+          Welcome <br>
+          <strong>{{ request.user.username }}</strong>
+        </p>
+        <a href="{% url 'buyer_logout' %}" class="bg-red-300 text-xl text-white inline-block rounded-full mt-12 px-8 py-2 transition duration-200 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+          Logout
+        </a>
+      </div>
+
+      <!-- Inbox Card -->
+      <div class="bg-no-repeat bg-orange-200 border border-orange-300 rounded-xl md:w-5/12 p-6" 
+           style="background-image: url('https://previews.dropbox.com/p/thumb/AAuwpqWfUgs9aC5lRoM_f-yi7OPV4txbpW1makBEj5l21sDbEGYsrC9sb6bwUFXTSsekeka5xb7_IHCdyM4p9XCUaoUjpaTSlKK99S_k4L5PIspjqKkiWoaUYiAeQIdnaUvZJlgAGVUEJoy-1PA9i6Jj0GHQTrF_h9MVEnCyPQ-kg4_p7kZ8Yk0TMTL7XDx4jGJFkz75geOdOklKT3GqY9U9JtxxvRRyo1Un8hOObbWQBS1eYE-MowAI5rNqHCE_e-44yXKY6AKJocLPXz_U4xp87K4mVGehFKC6dgk_i5Ur7gspuD7gRBDvd0sanJ9Ybr_6s2hZhrpad-2WFwWqSNkh/p.png?fv_content=true&size_mode=5'); background-position: 100% 40%;">
+        <p class="text-5xl text-indigo-900">
+          Inbox <br>
+          <strong>{{ inbox_count|default:"0" }}</strong>
+        </p>
+        <a href="" class="bg-orange-300 text-xl text-white underline inline-block rounded-full mt-12 px-8 py-2">
+          See messages
+        </a>
+      </div>
+    </div>
+
+    <!-- Additional Buyer Dashboard Components -->
+    <div class="flex flex-col gap-6 mt-8">
+      <!-- Wishlist -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-indigo-800 mb-4">My Wishlist</h3>
+        {% if wishlist_items %}
+          <ul class="divide-y divide-gray-200">
+            {% for item in wishlist_items %}
+              <li class="py-2 flex flex-col sm:flex-row justify-between items-center">
+                <span class="font-medium flex-1">{{ item.listing.title }}</span>
+                <div class="mt-2 sm:mt-0 sm:ml-4">
+                  <a href="{% url 'listing_detail' item.listing.id %}" class="text-blue-500 hover:underline text-sm mr-4">View</a>
+                  <a href="{% url 'remove_from_wishlist' item.listing.id %}" 
+                  class="inline-flex items-center px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded hover:bg-red-200"
+                  onclick="return confirm('Are you sure you want to remove this item from your wishlist?');">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                      Remove
+                  </a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-gray-500">No wishlist items.</p>
+        {% endif %}
+      </div>
+
+      <!-- Buy Requests -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-indigo-800 mb-4">Buy Requests Made</h3>
+        {% if buy_requests %}
+            <ul class="divide-y divide-gray-200">
+                {% for offer in buy_requests %}
+                    <li class="py-4">
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex justify-between items-start">
+                                <span class="font-medium text-gray-900">{{ offer.listing.title }}</span>
+                                <span class="px-3 py-1 text-sm rounded-full 
+                                    {% if offer.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif offer.status == 'accepted' %}bg-green-100 text-green-800
+                                    {% elif offer.status == 'rejected' %}bg-red-100 text-red-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ offer.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span>Offered Price: ₹{{ offer.proposed_price }}</span>
+                                <span>{{ offer.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            {% if offer.message %}
+                                <p class="text-sm text-gray-600">Message: {{ offer.message }}</p>
+                            {% endif %}
+                            <div class="flex space-x-3 mt-2">
+                                {% if offer.status == 'accepted' %}
+                                    <a href="{% url 'chat_room' offer.id %}" 
+                                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                        Open Chat
+                                    </a>
+                                {% endif %}
+                                <a href="{% url 'listing_detail' offer.listing.id %}" 
+                                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    View Listing
+                                </a>
+                                {% if offer.status == 'pending' %}
+                                    <form action="{% url 'cancel_buy_request' offer.id %}" method="POST" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" 
+                                                onclick="return confirm('Are you sure you want to cancel this offer?')"
+                                                class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                            Cancel Request
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">No buy requests made yet.</p>
+        {% endif %}
+      </div>
+
+      <!-- Orders Section -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-2xl font-bold text-indigo-800 mb-4">My Orders</h3>
+        {% if orders %}
+            <ul class="divide-y divide-gray-200">
+                {% for order in orders %}
+                    <li class="py-4">
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex justify-between items-start">
+                                <span class="font-medium text-gray-900">{{ order.listing.title }}</span>
+                                <span class="px-3 py-1 text-sm rounded-full 
+                                    {% if order.status == 'pending_payment' %}bg-yellow-100 text-yellow-800
+                                    {% elif order.status == 'processing' %}bg-blue-100 text-blue-800
+                                    {% elif order.status == 'completed' %}bg-green-100 text-green-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span>Final Price: ₹{{ order.final_price }}</span>
+                                <span>{{ order.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="flex space-x-3 mt-2">
+                                <a href="{% url 'chat_room' order.buy_request.id %}" 
+                                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    View Chat
+                                </a>
+                                <a href="{% url 'listing_detail' order.listing.id %}" 
+                                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    View Listing
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">No orders yet.</p>
+        {% endif %}
+
+        <a href="{% url 'all_listings' %}" class="block w-full bg-indigo-500 text-white text-center text-xl font-bold py-4 rounded-b-lg hover:bg-indigo-600 mt-8">
+            Shop more
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
