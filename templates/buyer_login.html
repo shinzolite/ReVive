@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}ReVive - Buyer Login{% endblock %}
+
+{% block content %}
+<div class="w-screen min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+    <div class="relative py-3 sm:max-w-xs sm:mx-auto">
+        <div class="min-h-96 px-8 py-2 mt-2 text-left bg-white rounded-xl shadow-lg">
+            <div class="flex flex-col justify-center items-center h-full select-none">
+                <div class="flex flex-col items-center justify-center gap-2 mb-8">
+                    <p class="m-0 text-2xl font-semibold">Login to your Account</p>
+                    <span class="m-0 text-base max-w-[90%] text-center text-[#8B8E98]">
+                        Get started with buying second hand goods!
+                    </span>
+                </div>
+                <!-- Start Login Form -->
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="w-full flex flex-col gap-2">
+                        <label class="font-semibold text-base text-gray-400">Username</label>
+                        <input name="username" class="border rounded-lg px-3 py-2 mb-5 text-base w-full outline-none" placeholder="Username" required>
+                    </div>
+                    <div class="w-full flex flex-col gap-2">
+                        <label class="font-semibold text-base text-gray-400">Password</label>
+                        <input type="password" name="password" class="border rounded-lg px-3 py-2 mb-5 text-base w-full outline-none" placeholder="••••••••" required>
+                    </div>
+                    <div class="mt-5">
+                        <button type="submit" class="py-2 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">
+                            Login
+                        </button>
+                    </div>
+                </form>
+                <!-- End Login Form -->
+            </div>
+            <div class="text-center mt-2">
+                <p class="text-sm text-gray-400 mt-6">
+                    Don't have an account? <a href="{% url 'buyer_signup' %}" class="text-blue-500">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

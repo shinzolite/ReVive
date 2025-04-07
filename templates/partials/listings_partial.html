@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}All Listings{% endblock %}
+
+{% block content %}
+<!-- Include HTMX -->
+<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+
+<div class="container mx-auto p-4 md:p-6 lg:p-8 bg-gray-50 min-h-screen">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl mb-8 p-6 md:p-8 shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Discover Amazing Items</h1>
+        <p class="text-blue-100 text-lg mb-6">Find exactly what you're looking for with our easy filtering options</p>
+        
+        <!-- Search Bar -->
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input 
+                type="text" 
+                id="search" 
+                name="query"
+                placeholder="Search for items..." 
+                class="w-full p-4 pl-10 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-blue-400 text-gray-800"
+                hx-get="/search_listings/"
+                hx-trigger="keyup changed delay:500ms"
+                hx-target="#listings-grid"
+                hx-indicator="#search-indicator">
+            <div id="search-indicator" class="htmx-indicator absolute right-4 top-4">
+                <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Filters Sidebar -->
+        <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path>
+                </svg>
+                Filters
+            </h2>
+            
+            <!-- Price Range Filter -->
+            <div class="mb-6">
+                <label for="max-price" class="block mb-2 text-sm font-medium text-gray-700">Maximum Price (₹)</label>
+                <div class="flex flex-col space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-gray-600">₹0</span>
+                        <input 
+                            type="range" 
+                            id="max-price" 
+                            name="max_price"
+                            min="0" 
+                            max="1000000" 
+                            value="1000000" 
+                            step="10000"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                            oninput="updateMaxPriceLabel(this.value)">
+                        <span class="text-xs text-gray-600">₹1M</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm font-medium">₹</span>
+                        <input 
+                            type="number" 
+                            id="max-price-input" 
+                            value="1000000" 
+                            class="block w-full p-2 text-gray-700 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                            oninput="updateMaxPriceFromInput(this.value)">
+                    </div>
+                    <div class="text-center">
+                        <span id="max-price-label" class="text-sm font-semibold text-blue-600">₹1,000,000</span>
+                    </div>
+                </div>
+                <button 
+                    class="mt-4 w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    hx-get="/filter_listings/"
+                    hx-include="[name='max_price']"
+                    hx-target="#listings-grid"
+                    hx-indicator="#filter-indicator">
+                    <span>Apply Filter</span>
+                    <div id="filter-indicator" class="htmx-indicator ml-2">
+                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- Sorting Options -->
+            <div class="mb-4">
+                <label for="sort-options" class="block mb-2 text-sm font-medium text-gray-700">Sort by</label>
+                <select 
+                    id="sort-options" 
+                    name="order"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    hx-get="/sort_listings/"
+                    hx-target="#listings-grid"
+                    hx-trigger="change"
+                    hx-indicator="#sort-indicator">
+                    <option value="">Best Match</option>
+                    <option value="price_low_high">Price: Low to High</option>
+                    <option value="price_high_low">Price: High to Low</option>
+                    <option value="newest">Newest Listings</option>
+                    <option value="oldest">Oldest Listings</option>
+
+                </select>
+                <div id="sort-indicator" class="htmx-indicator flex justify-center mt-2">
+                    <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Listings Content -->
+        <div class="lg:col-span-3">
+            <!-- Results Summary -->
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h2 class="text-xl font-bold text-gray-800">Available Items</h2>
+                <p class="text-sm text-gray-600">Showing <span id="item-count">{{ listings|length }}</span> items</p>
+            </div>
+            
+            <!-- Listings Grid Container -->
+            <div id="listings-grid">
+                {% include 'partials/listings_grid.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Price range slider functionality
+    function updateMaxPriceLabel(value) {
+        const formattedValue = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(value);
+        
+        document.getElementById('max-price-label').innerText = formattedValue;
+        document.getElementById('max-price-input').value = value;
+    }
+
+    function updateMaxPriceFromInput(value) {
+        const maxPrice = document.getElementById('max-price');
+        maxPrice.value = value;
+        updateMaxPriceLabel(value);
+    }
+
+    // Initialize price label on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateMaxPriceLabel(document.getElementById('max-price').value);
+    });
+
+    // Update item count when listings are refreshed
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id === 'listings-grid') {
+            const itemCount = document.querySelectorAll('#listings-grid > div > div').length;
+            document.getElementById('item-count').textContent = itemCount === 0 ? 0 : itemCount;
+        }
+    });
+</script>
+{% endblock %}

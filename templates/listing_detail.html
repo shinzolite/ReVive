@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ listing.title }} - ReVive{% endblock %}
+
+{% block content %}
+<!-- GLightbox Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+{% if messages %}
+  <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-4">
+    {% for message in messages %}
+      {% if "success" in message.tags %}
+        <!-- Toast for Success -->
+        <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+          <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+            </svg>
+            <span class="sr-only">Check icon</span>
+          </div>
+          <div class="ml-3 text-sm font-normal">{{ message }}</div>
+          <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+          </button>
+        </div>
+      {% elif "info" in message.tags %}
+        <!-- Toast for Info -->
+        <div id="toast-warning" class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+          <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM10 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-4a1 1 0 0 1-2 0V6a1 1 0 0 1 2 0v5Z"/>
+            </svg>
+            <span class="sr-only">Warning icon</span>
+          </div>
+          <div class="ml-3 text-sm font-normal">{{ message }}</div>
+          <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-warning" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+<div class="bg-gray-100">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row md:items-start gap-8">
+
+      <!-- Product Images -->
+      <div class="w-full md:w-1/2">
+        <a href="{{ images.0.image.url }}" class="glightbox">
+          <img src="{{ images.0.image.url }}" alt="{{ listing.title }}" 
+               class="w-full h-auto rounded-lg shadow-md mb-4" id="mainImage">
+        </a>
+        <div class="flex gap-4 py-4 justify-center overflow-x-auto">
+          {% for image in images %}
+          <a href="{{ image.image.url }}" class="glightbox">
+            <img src="{{ image.image.url }}" alt="Thumbnail {{ forloop.counter }}" 
+                 class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
+                 onclick="changeImage('{{ image.image.url }}')">
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="w-full md:w-1/2">
+        <h2 class="text-3xl font-bold mb-2">{{ listing.title }}</h2>
+        <p class="text-gray-600 mb-4">Listed by: {{ listing.seller.username }}</p>
+        
+        <div class="mb-4">
+          <span class="text-2xl font-bold mr-2">₹{{ listing.price }}</span>
+          {% if listing.negotiable %}
+            <span class="text-green-600 font-semibold">Negotiable</span>
+          {% endif %}
+        </div>
+
+        <p class="text-gray-700 mb-6">{{ listing.description }}</p>
+
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold mb-2">Details:</h3>
+          <ul class="list-disc list-inside text-gray-700">
+            <li><strong>Category:</strong> {{ listing.get_category_display }}</li>
+            <li><strong>Condition:</strong> {{ listing.get_condition_display }}</li>
+            <li><strong>Location:</strong> {{ listing.location }}</li>
+            {% if listing.shipping_available %}
+              <li class="text-green-600">Shipping Available</li>
+            {% else %}
+              <li class="text-red-600">Pickup Only</li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-2">Contact:</h3>
+          <p class="text-gray-700"><strong>Phone:</strong> {{ listing.contact_number }}</p>
+        </div>
+
+        <!-- Buttons (only visible if the user is NOT the seller) -->
+        {% if not is_seller %}
+        <div class="flex space-x-4 mb-6">
+            <!-- Make Offer Button -->
+            {% if listing.is_available %}
+                {% if user.is_authenticated and user.buyer %}
+                <button id="open-modal" class="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                    Make Offer
+                </button>
+                {% else %}
+                <a href="{% url 'buyer_signup' %}" class="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                    Sign Up as Buyer
+                </a>
+                {% endif %}
+            {% else %}
+            <button class="bg-gray-200 flex gap-2 items-center text-gray-800 px-6 py-2 rounded-md cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Not Available
+            </button>
+            {% endif %}
+
+            <!-- Add to Wishlist Button -->
+            <a href="{% url 'add_to_wishlist' listing.id %}">
+                <button class="bg-gray-200 flex gap-2 items-center text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                    </svg>
+                    Add to Wishlist
+                </button>
+            </a>
+        </div>
+        {% endif %}
+
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="buyRequestModal" class="hidden fixed inset-0 flex items-center justify-center bg-black/50 p-4">
+  <div class="w-full max-w-sm bg-white rounded-2xl p-6 shadow relative">
+      <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Make an Offer</h2>
+          <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+          </button>
+      </div>
+      <form id="buyRequestForm" method="POST" action="{% url 'make_buy_request' listing.id %}">
+          {% csrf_token %}
+          <label class="block text-sm font-medium text-gray-700 mb-2">Proposed Price</label>
+          <input type="number" name="proposed_price" value="{{ listing.price }}" class="w-full rounded-lg border border-gray-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+          <label class="block text-sm font-medium text-gray-700 mt-4 mb-2">Message (Optional)</label>
+          <textarea name="message" class="w-full rounded-lg border border-gray-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+
+          <button type="submit" class="mt-4 w-full rounded-lg bg-indigo-600 py-2.5 text-sm font-medium text-white transition duration-300 hover:bg-indigo-700">
+              Submit Offer
+          </button>
+      </form>
+  </div>
+</div>
+
+<!-- JavaScript for Modal -->
+<script>
+  document.getElementById('open-modal').addEventListener('click', function() {
+      document.getElementById('buyRequestModal').classList.remove('hidden');
+  });
+  
+  document.getElementById('close-modal').addEventListener('click', function() {
+      document.getElementById('buyRequestModal').classList.add('hidden');
+  });
+  </script>
+
+<!-- GLightbox Script -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  const lightbox = GLightbox({ selector: '.glightbox' });
+
+  function changeImage(src) {
+    document.getElementById('mainImage').src = src;
+  }
+</script>
+
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('#toast-success, #toast-warning').forEach(toast => {
+      toast.style.transition = 'opacity 0.5s ease';
+      toast.style.opacity = '0';
+      setTimeout(() => { toast.remove(); }, 300);
+    });
+  }, 3000);
+</script>
+
+{% endblock %}

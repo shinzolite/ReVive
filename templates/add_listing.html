@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}ReVive - Buyer Login{% endblock %}
+
+{% block content %}
+
+<!-- Add these in the head section or where you include CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+<div class="bg-white border border-4 rounded-lg shadow relative m-10">
+
+    <div class="flex items-start justify-between p-5 border-b rounded-t">
+        <h3 class="text-xl font-semibold">
+            Add a Product Listing
+        </h3>
+    </div>
+
+    <div class="p-6 space-y-6">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="grid grid-cols-6 gap-6">
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="title" class="text-sm font-medium text-gray-900 block mb-2">Product Name</label>
+                    <input type="text" name="title" id="title" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Apple iMac 27" required>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="category" class="text-sm font-medium text-gray-900 block mb-2">Category</label>
+                    <select name="category" id="category" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" required>
+                        {% for value, label in category_choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="condition" class="text-sm font-medium text-gray-900 block mb-2">Condition</label>
+                    <select name="condition" id="condition" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" required>
+                        {% for value, label in condition_choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="price" class="text-sm font-medium text-gray-900 block mb-2">Price</label>
+                    <input type="number" name="price" id="price" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Rs.2300" required>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="brand" class="text-sm font-medium text-gray-900 block mb-2">Brand</label>
+                    <input type="text" name="brand" id="brand" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Apple">
+                </div>
+                
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="model" class="text-sm font-medium text-gray-900 block mb-2">Model</label>
+                    <input type="text" name="model" id="model" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="iMac 27">
+                </div>
+                
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="year" class="text-sm font-medium text-gray-900 block mb-2">Year</label>
+                    <input type="number" name="year" id="year" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="2022">
+                </div>
+                
+                <div class="col-span-6">
+                    <label for="other_details" class="text-sm font-medium text-gray-900 block mb-2">Other Details</label>
+                    <textarea name="other_details" id="other_details" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4" placeholder="Additional information"></textarea>
+                </div>
+                <div class="col-span-6">
+                    <label for="location" class="text-sm font-medium text-gray-900 block mb-2">Location</label>
+                    <input type="text" name="location" id="location" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Trivandrum, Kerala" required>
+                    
+                    <!-- Hidden fields for coordinates -->
+                    <input type="hidden" name="latitude" id="latitude">
+                    <input type="hidden" name="longitude" id="longitude">
+                    
+                    <!-- Map container -->
+                    <div id="map" class="mt-2 rounded-lg" style="height: 400px;"></div>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label for="contact_number" class="text-sm font-medium text-gray-900 block mb-2">Contact Number</label>
+                    <input type="text" name="contact_number" id="contact_number" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="9876543210" required>
+                </div>
+                <div class="col-span-6">
+                    <label for="description" class="text-sm font-medium text-gray-900 block mb-2">Product Details</label>
+                    <textarea name="description" id="description" rows="6" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4" placeholder="Details"></textarea>
+                </div>
+                
+                <div class="col-span-6">
+                    <label for="images" class="text-sm font-medium text-gray-900 block mb-2">Upload Images</label>
+                    <input type="file" name="images" id="images" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" multiple>
+                </div>
+                
+                <div class="col-span-6 sm:col-span-3">
+                    <label class="text-sm font-medium text-gray-900 block mb-2">
+                        <input type="checkbox" name="shipping_available" class="mr-2">
+                        Shipping Available
+                    </label>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label class="text-sm font-medium text-gray-900 block mb-2">
+                        <input type="checkbox" name="negotiable" class="mr-2">
+                        Price Negotiable
+                    </label>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-gray-200 rounded-b mt-6">
+                <button class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" type="submit">Save all</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add these before the closing </body> tag -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize map centered on Trivandrum
+        const map = L.map('map').setView([9.9312, 76.2673], 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add geocoder control
+        const geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false
+        }).addTo(map);
+
+        // Create marker
+        let marker = null;
+
+        // Function to update marker and fields
+        function updateLocation(latlng, address = '') {
+            if (marker) {
+                marker.setLatLng(latlng);
+            } else {
+                marker = L.marker(latlng, {draggable: true}).addTo(map);
+                
+                // Update coordinates when marker is dragged
+                marker.on('dragend', function(e) {
+                    const position = e.target.getLatLng();
+                    document.getElementById('latitude').value = position.lat;
+                    document.getElementById('longitude').value = position.lng;
+                    
+                    // Reverse geocode to get address
+                    geocoder.options.geocoder.reverse(position, map.options.crs.scale(map.getZoom()), function(results) {
+                        if (results.length > 0) {
+                            document.getElementById('location').value = results[0].name;
+                        }
+                    });
+                });
+            }
+            
+            // Update hidden fields
+            document.getElementById('latitude').value = latlng.lat;
+            document.getElementById('longitude').value = latlng.lng;
+            if (address) {
+                document.getElementById('location').value = address;
+            }
+        }
+
+        // Handle geocoding results
+        geocoder.on('markgeocode', function(e) {
+            const latlng = e.geocode.center;
+            map.setView(latlng, 16);
+            updateLocation(latlng, e.geocode.name);
+        });
+
+        // Handle map clicks
+        map.on('click', function(e) {
+            updateLocation(e.latlng);
+            
+            // Reverse geocode to get address
+            geocoder.options.geocoder.reverse(e.latlng, map.options.crs.scale(map.getZoom()), function(results) {
+                if (results.length > 0) {
+                    document.getElementById('location').value = results[0].name;
+                }
+            });
+        });
+
+        // Handle location input changes
+        const locationInput = document.getElementById('location');
+        locationInput.addEventListener('change', function() {
+            if (this.value) {
+                geocoder.options.geocoder.geocode(this.value, function(results) {
+                    if (results.length > 0) {
+                        const latlng = results[0].center;
+                        map.setView(latlng, 16);
+                        updateLocation(latlng, results[0].name);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}ReVive - Buy and Sell Second-hand Goods{% endblock %}
+
+{% block content %}
+<div class="bg-white pt-16 pr-4 pb-16 pl-4 mr-auto ml-auto flex flex-col items-center relative lg:flex-row lg:py-12 xl:py-16 md:px-8">
+    <div class="flex justify-start px-24 items-center w-full h-full lg:w-1/2 lg:justify-start lg:left-0 lg:items-center">
+        <img alt="" src="https://png.pngtree.com/png-vector/20241116/ourmid/pngtree-smiling-man-giving-thumbs-up-png-image_14421150.png" class="object-contain object-top w-full h-auto lg:w-auto lg:h-full"/>
+    </div>
+    <div class="mr-auto ml-auto flex justify-end relative max-w-xl xl:pr-32 lg:max-w-screen-xl">
+        <div class="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0">
+            <div class="mb-6 max-w-xl">
+                <p class="inline-block pt-1 pr-3 pb-1 pl-3 mb-4 text-white bg-pink-500 rounded-2xl uppercase text-xs font-semibold tracking-wider">Sustainable Shopping</p>
+                <div class="text-3xl font-bold tracking-tight text-gray-900 max-w-lg sm:text-4xl sm:leading-none mb-6">
+                    <p class="text-gray-900 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">Give pre-loved items</p>
+                    <p class="inline-block text-gray-900 text-3xl font-bold tracking-tight mr-2 sm:text-4xl sm:leading-none">a new</p>
+                    <p class="inline-block text-blue-700 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">home</p>
+                </div>
+                <p class="text-gray-700 text-base md:text-lg">Join the premier marketplace for second-hand goods. Buy and sell pre-loved items, reduce waste, and find amazing deals in your local community.</p>
+            </div>
+            <div class="flex items-center mt-4 mr-0 mb-0 ml-0">
+                <a href="{% url 'category_search' %}">
+                    <button class="transition duration-200 hover:bg-blue-900 focus:shadow-outline focus:outline-none bg-blue-700 text-white inline-flex font-semibold tracking-wide h-12 rounded-md shadow-md items-center justify-center pr-6 pl-6 mr-6">Start Shopping</button>
+                </a>
+
+                <a href="{% url 'buyer_login' %}">
+                    <button class="transition duration-200 hover:bg-white focus:shadow-outline focus:outline-none bg-white-700 text-black inline-flex font-semibold tracking-wide h-12 rounded-md shadow-md items-center justify-center pr-6 pl-6">Buyer Login</button>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="bg-white pt-16 pr-4 pb-16 pl-4 mr-auto ml-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+    <div class="grid gap-5 row-gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="pt-0 pr-12 pb-0 pl-12 text-center sm:px-0">
+            <p class="mt-0 mr-auto mb-4 ml-auto flex w-10 h-10 items-center justify-center rounded-full sm:w-10 sm:h-10">
+                <svg viewBox="0 0 512 512" fill="currentColor" class="w-7" xmlns="http://www.w3.org/2000/svg"><path d="m511.4 38.222c-1.109-20.338-17.284-36.511-37.622-37.621-41.038-2.242-121.342-.061-198.13 39.656-39.145 20.248-80.545 54.577-113.584 94.185-.407.488-.803.979-1.207 1.468l-74.98 5.792c-12.342.954-23.335 7.423-30.161 17.747l-51.154 77.372c-5.177 7.83-6 17.629-2.203 26.212 3.798 8.584 11.602 14.566 20.877 16.003l63.171 9.784c-.223 1.228-.447 2.455-.652 3.683-2.103 12.58 2.065 25.514 11.151 34.599l87.992 87.993c7.533 7.533 17.712 11.686 28.142 11.686 2.148 0 4.308-.177 6.458-.536 1.228-.205 2.455-.429 3.683-.652l9.784 63.172c1.437 9.275 7.419 17.08 16.001 20.877 3.571 1.58 7.35 2.36 11.112 2.36 5.283-.001 10.529-1.539 15.101-4.562l77.372-51.155c10.325-6.827 16.793-17.82 17.745-30.161l5.792-74.979c.489-.404.981-.8 1.469-1.207 39.609-33.039 73.939-74.439 94.186-113.585 39.719-76.791 41.896-157.096 39.657-198.131zm-175.394 393.037-74.011 48.933-9.536-61.565c31.28-9.197 62.223-23.927 91.702-43.66l-3.773 48.845c-.235 3.047-1.833 5.762-4.382 7.447zm-129.895-37.377-87.993-87.993c-2.245-2.246-3.283-5.401-2.774-8.44 2.616-15.643 6.681-30.534 11.713-44.562l132.028 132.028c-16.848 6.035-31.939 9.635-44.534 11.741-3.044.506-6.195-.529-8.44-2.774zm-117.923-222.269 48.844-3.773c-19.734 29.479-34.464 60.422-43.661 91.702l-61.564-9.535 48.934-74.012c1.686-2.55 4.401-4.147 7.447-4.382zm270.155 155.286c-24.233 20.213-47.756 34.833-69.438 45.412l-149.221-149.221c13.858-28.304 30.771-51.873 45.417-69.431 30.575-36.655 68.602-68.276 104.331-86.756 70.474-36.453 144.725-38.416 182.713-36.348 5.028.274 9.027 4.273 9.301 9.302 2.071 37.988.104 112.238-36.349 182.713-18.479 35.728-50.1 73.754-86.754 104.329z"/></path><path d="m350.721 236.243c19.202-.002 38.412-7.312 53.031-21.931 14.166-14.165 21.966-32.999 21.966-53.031s-7.801-38.866-21.966-53.031c-29.242-29.243-76.822-29.241-106.062 0-14.166 14.165-21.967 32.999-21.967 53.031s7.802 38.866 21.967 53.031c14.622 14.622 33.822 21.933 53.031 21.931zm-31.82-106.781c8.772-8.773 20.295-13.159 31.818-13.159 11.524 0 23.047 4.386 31.819 13.159 8.499 8.499 13.179 19.799 13.179 31.818s-4.68 23.32-13.179 31.819c-17.544 17.545-46.093 17.544-63.638 0-8.499-8.499-13.18-19.799-13.18-31.818s4.682-23.32 13.181-31.819z"/></path><path d="m15.301 421.938c3.839 0 7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0l-48.972 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.928 2.929 6.767 4.394 10.606 4.394z"/></path><path d="m119.761 392.239c-5.857-5.858-15.355-5.858-21.213 0l-94.154 94.155c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.767 4.393 10.606 4.393s7.678-1.464 10.606-4.394l94.154-94.154c5.859-5.858 5.859-15.355.001-21.213z"/></path><path d="m143.429 437.12-48.973 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.768 4.394 10.606 4.394s7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.212 0z"/></path></svg>
+            </p>
+            <p class="leading-5 text-sm font-bold tracking-wider mb-2 uppercase">Sustainable</p>
+            <p class="text-sm text-gray-700 mb-2">Reduce waste and environmental impact by giving items a second life.</p>
+        </div>
+        <div class="pt-0 pr-12 pb-0 pl-12 text-center sm:px-0">
+            <p class="mt-0 mr-auto mb-4 ml-auto flex w-10 h-10 items-center justify-center rounded-full sm:w-10 sm:h-10">
+                <svg viewBox="0 0 512 512" fill="currentColor" class="w-7" xmlns="http://www.w3.org/2000/svg"><path d="m511.4 38.222c-1.109-20.338-17.284-36.511-37.622-37.621-41.038-2.242-121.342-.061-198.13 39.656-39.145 20.248-80.545 54.577-113.584 94.185-.407.488-.803.979-1.207 1.468l-74.98 5.792c-12.342.954-23.335 7.423-30.161 17.747l-51.154 77.372c-5.177 7.83-6 17.629-2.203 26.212 3.798 8.584 11.602 14.566 20.877 16.003l63.171 9.784c-.223 1.228-.447 2.455-.652 3.683-2.103 12.58 2.065 25.514 11.151 34.599l87.992 87.993c7.533 7.533 17.712 11.686 28.142 11.686 2.148 0 4.308-.177 6.458-.536 1.228-.205 2.455-.429 3.683-.652l9.784 63.172c1.437 9.275 7.419 17.08 16.001 20.877 3.571 1.58 7.35 2.36 11.112 2.36 5.283-.001 10.529-1.539 15.101-4.562l77.372-51.155c10.325-6.827 16.793-17.82 17.745-30.161l5.792-74.979c.489-.404.981-.8 1.469-1.207 39.609-33.039 73.939-74.439 94.186-113.585 39.719-76.791 41.896-157.096 39.657-198.131zm-175.394 393.037-74.011 48.933-9.536-61.565c31.28-9.197 62.223-23.927 91.702-43.66l-3.773 48.845c-.235 3.047-1.833 5.762-4.382 7.447zm-129.895-37.377-87.993-87.993c-2.245-2.246-3.283-5.401-2.774-8.44 2.616-15.643 6.681-30.534 11.713-44.562l132.028 132.028c-16.848 6.035-31.939 9.635-44.534 11.741-3.044.506-6.195-.529-8.44-2.774zm-117.923-222.269 48.844-3.773c-19.734 29.479-34.464 60.422-43.661 91.702l-61.564-9.535 48.934-74.012c1.686-2.55 4.401-4.147 7.447-4.382zm270.155 155.286c-24.233 20.213-47.756 34.833-69.438 45.412l-149.221-149.221c13.858-28.304 30.771-51.873 45.417-69.431 30.575-36.655 68.602-68.276 104.331-86.756 70.474-36.453 144.725-38.416 182.713-36.348 5.028.274 9.027 4.273 9.301 9.302 2.071 37.988.104 112.238-36.349 182.713-18.479 35.728-50.1 73.754-86.754 104.329z"/></path><path d="m350.721 236.243c19.202-.002 38.412-7.312 53.031-21.931 14.166-14.165 21.966-32.999 21.966-53.031s-7.801-38.866-21.966-53.031c-29.242-29.243-76.822-29.241-106.062 0-14.166 14.165-21.967 32.999-21.967 53.031s7.802 38.866 21.967 53.031c14.622 14.622 33.822 21.933 53.031 21.931zm-31.82-106.781c8.772-8.773 20.295-13.159 31.818-13.159 11.524 0 23.047 4.386 31.819 13.159 8.499 8.499 13.179 19.799 13.179 31.818s-4.68 23.32-13.179 31.819c-17.544 17.545-46.093 17.544-63.638 0-8.499-8.499-13.18-19.799-13.18-31.818s4.682-23.32 13.181-31.819z"/></path><path d="m15.301 421.938c3.839 0 7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0l-48.972 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.928 2.929 6.767 4.394 10.606 4.394z"/></path><path d="m119.761 392.239c-5.857-5.858-15.355-5.858-21.213 0l-94.154 94.155c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.767 4.393 10.606 4.393s7.678-1.464 10.606-4.394l94.154-94.154c5.859-5.858 5.859-15.355.001-21.213z"/></path><path d="m143.429 437.12-48.973 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.768 4.394 10.606 4.394s7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.212 0z"/></path></svg>
+            </p>
+            <p class="leading-5 text-sm font-bold tracking-wider mb-2 uppercase">Local</p>
+            <p class="text-sm text-gray-700 mb-2">Connect with buyers and sellers in your neighborhood.</p>
+        </div>
+        <div class="pt-0 pr-12 pb-0 pl-12 text-center sm:px-0">
+            <p class="mt-0 mr-auto mb-4 ml-auto flex w-10 h-10 items-center justify-center rounded-full sm:w-10 sm:h-10">
+                <svg viewBox="0 0 512 512" fill="currentColor" class="w-7" xmlns="http://www.w3.org/2000/svg"><path d="m511.4 38.222c-1.109-20.338-17.284-36.511-37.622-37.621-41.038-2.242-121.342-.061-198.13 39.656-39.145 20.248-80.545 54.577-113.584 94.185-.407.488-.803.979-1.207 1.468l-74.98 5.792c-12.342.954-23.335 7.423-30.161 17.747l-51.154 77.372c-5.177 7.83-6 17.629-2.203 26.212 3.798 8.584 11.602 14.566 20.877 16.003l63.171 9.784c-.223 1.228-.447 2.455-.652 3.683-2.103 12.58 2.065 25.514 11.151 34.599l87.992 87.993c7.533 7.533 17.712 11.686 28.142 11.686 2.148 0 4.308-.177 6.458-.536 1.228-.205 2.455-.429 3.683-.652l9.784 63.172c1.437 9.275 7.419 17.08 16.001 20.877 3.571 1.58 7.35 2.36 11.112 2.36 5.283-.001 10.529-1.539 15.101-4.562l77.372-51.155c10.325-6.827 16.793-17.82 17.745-30.161l5.792-74.979c.489-.404.981-.8 1.469-1.207 39.609-33.039 73.939-74.439 94.186-113.585 39.719-76.791 41.896-157.096 39.657-198.131zm-175.394 393.037-74.011 48.933-9.536-61.565c31.28-9.197 62.223-23.927 91.702-43.66l-3.773 48.845c-.235 3.047-1.833 5.762-4.382 7.447zm-129.895-37.377-87.993-87.993c-2.245-2.246-3.283-5.401-2.774-8.44 2.616-15.643 6.681-30.534 11.713-44.562l132.028 132.028c-16.848 6.035-31.939 9.635-44.534 11.741-3.044.506-6.195-.529-8.44-2.774zm-117.923-222.269 48.844-3.773c-19.734 29.479-34.464 60.422-43.661 91.702l-61.564-9.535 48.934-74.012c1.686-2.55 4.401-4.147 7.447-4.382zm270.155 155.286c-24.233 20.213-47.756 34.833-69.438 45.412l-149.221-149.221c13.858-28.304 30.771-51.873 45.417-69.431 30.575-36.655 68.602-68.276 104.331-86.756 70.474-36.453 144.725-38.416 182.713-36.348 5.028.274 9.027 4.273 9.301 9.302 2.071 37.988.104 112.238-36.349 182.713-18.479 35.728-50.1 73.754-86.754 104.329z"/></path><path d="m350.721 236.243c19.202-.002 38.412-7.312 53.031-21.931 14.166-14.165 21.966-32.999 21.966-53.031s-7.801-38.866-21.966-53.031c-29.242-29.243-76.822-29.241-106.062 0-14.166 14.165-21.967 32.999-21.967 53.031s7.802 38.866 21.967 53.031c14.622 14.622 33.822 21.933 53.031 21.931zm-31.82-106.781c8.772-8.773 20.295-13.159 31.818-13.159 11.524 0 23.047 4.386 31.819 13.159 8.499 8.499 13.179 19.799 13.179 31.818s-4.68 23.32-13.179 31.819c-17.544 17.545-46.093 17.544-63.638 0-8.499-8.499-13.18-19.799-13.18-31.818s4.682-23.32 13.181-31.819z"/></path><path d="m15.301 421.938c3.839 0 7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0l-48.972 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.928 2.929 6.767 4.394 10.606 4.394z"/></path><path d="m119.761 392.239c-5.857-5.858-15.355-5.858-21.213 0l-94.154 94.155c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.767 4.393 10.606 4.393s7.678-1.464 10.606-4.394l94.154-94.154c5.859-5.858 5.859-15.355.001-21.213z"/></path><path d="m143.429 437.12-48.973 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.768 4.394 10.606 4.394s7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.212 0z"/></path></svg>
+            </p>
+            <p class="leading-5 text-sm font-bold tracking-wider mb-2 uppercase">Affordable</p>
+            <p class="text-sm text-gray-700 mb-2">Find great deals on quality pre-owned items at fraction of original prices.</p>
+        </div>
+        <div class="pt-0 pr-12 pb-0 pl-12 text-center sm:px-0">
+            <p class="mt-0 mr-auto mb-4 ml-auto flex w-10 h-10 items-center justify-center rounded-full sm:w-10 sm:h-10">
+                <svg viewBox="0 0 512 512" fill="currentColor" class="w-7" xmlns="http://www.w3.org/2000/svg"><path d="m511.4 38.222c-1.109-20.338-17.284-36.511-37.622-37.621-41.038-2.242-121.342-.061-198.13 39.656-39.145 20.248-80.545 54.577-113.584 94.185-.407.488-.803.979-1.207 1.468l-74.98 5.792c-12.342.954-23.335 7.423-30.161 17.747l-51.154 77.372c-5.177 7.83-6 17.629-2.203 26.212 3.798 8.584 11.602 14.566 20.877 16.003l63.171 9.784c-.223 1.228-.447 2.455-.652 3.683-2.103 12.58 2.065 25.514 11.151 34.599l87.992 87.993c7.533 7.533 17.712 11.686 28.142 11.686 2.148 0 4.308-.177 6.458-.536 1.228-.205 2.455-.429 3.683-.652l9.784 63.172c1.437 9.275 7.419 17.08 16.001 20.877 3.571 1.58 7.35 2.36 11.112 2.36 5.283-.001 10.529-1.539 15.101-4.562l77.372-51.155c10.325-6.827 16.793-17.82 17.745-30.161l5.792-74.979c.489-.404.981-.8 1.469-1.207 39.609-33.039 73.939-74.439 94.186-113.585 39.719-76.791 41.896-157.096 39.657-198.131zm-175.394 393.037-74.011 48.933-9.536-61.565c31.28-9.197 62.223-23.927 91.702-43.66l-3.773 48.845c-.235 3.047-1.833 5.762-4.382 7.447zm-129.895-37.377-87.993-87.993c-2.245-2.246-3.283-5.401-2.774-8.44 2.616-15.643 6.681-30.534 11.713-44.562l132.028 132.028c-16.848 6.035-31.939 9.635-44.534 11.741-3.044.506-6.195-.529-8.44-2.774zm-117.923-222.269 48.844-3.773c-19.734 29.479-34.464 60.422-43.661 91.702l-61.564-9.535 48.934-74.012c1.686-2.55 4.401-4.147 7.447-4.382zm270.155 155.286c-24.233 20.213-47.756 34.833-69.438 45.412l-149.221-149.221c13.858-28.304 30.771-51.873 45.417-69.431 30.575-36.655 68.602-68.276 104.331-86.756 70.474-36.453 144.725-38.416 182.713-36.348 5.028.274 9.027 4.273 9.301 9.302 2.071 37.988.104 112.238-36.349 182.713-18.479 35.728-50.1 73.754-86.754 104.329z"/></path><path d="m350.721 236.243c19.202-.002 38.412-7.312 53.031-21.931 14.166-14.165 21.966-32.999 21.966-53.031s-7.801-38.866-21.966-53.031c-29.242-29.243-76.822-29.241-106.062 0-14.166 14.165-21.967 32.999-21.967 53.031s7.802 38.866 21.967 53.031c14.622 14.622 33.822 21.933 53.031 21.931zm-31.82-106.781c8.772-8.773 20.295-13.159 31.818-13.159 11.524 0 23.047 4.386 31.819 13.159 8.499 8.499 13.179 19.799 13.179 31.818s-4.68 23.32-13.179 31.819c-17.544 17.545-46.093 17.544-63.638 0-8.499-8.499-13.18-19.799-13.18-31.818s4.682-23.32 13.181-31.819z"/></path><path d="m15.301 421.938c3.839 0 7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0l-48.972 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.928 2.929 6.767 4.394 10.606 4.394z"/></path><path d="m119.761 392.239c-5.857-5.858-15.355-5.858-21.213 0l-94.154 94.155c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.767 4.393 10.606 4.393s7.678-1.464 10.606-4.394l94.154-94.154c5.859-5.858 5.859-15.355.001-21.213z"/></path><path d="m143.429 437.12-48.973 48.973c-5.858 5.858-5.858 15.355 0 21.213 2.929 2.929 6.768 4.394 10.606 4.394s7.678-1.464 10.606-4.394l48.973-48.973c5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.212 0z"/></path></svg>
+            </p>
+            <p class="leading-5 text-sm font-bold tracking-wider mb-2 uppercase">Secure</p>
+            <p class="text-sm text-gray-700 mb-2">Safe and verified platform for hassle-free buying and selling.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<section class="mx-auto py-20 max-w-screen-2xl p-4">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div class="mb-16">
+            <p class="text-center text-gray-600 mb-2 font-medium tracking-wide uppercase">testimonials</p>
+            <p class="text-4xl md:text-6xl font-bold tracking-tight text-center">What our community says!</p>
+        </div>
+        <div class="md:grid-cols-2 md:gap-8 md:max-w-2xl lg:max-w-full mx-auto grid grid-cols-1 gap-5 max-w-lg">
+                    <div class="bg-white rounded-xl w-full mx-auto group border border-solid border-gray-300 p-6 transition-all duration-500 hover:border-black hover:shadow-sm">
+                        <div>
+                            <p class="text-base text-black leading-6 pb-8 transition-all duration-500 group-hover:text-gray-800">Found exactly the laptop I needed for my project assignments at half the retail price. The seller was very helpful and the transaction was smooth.</p>
+                        </div>
+                        <div class="items-center pt-5 flex gap-5">
+                            <img alt="Sai image"
+                                src="../media/reviewers/saikrishna/Saikrishna.jpg"
+                                class="object-cover h-20 w-20 rounded-full"/>
+                            <div class="block">
+                                <p class="text-2xl text-gray-900 font-medium mb-1 transition-all duration-500">Sai Krishna</p>
+                                <span class="text-base leading-4 text-gray-500">Leading Software Engineer in kerala</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl w-full mx-auto group border border-solid border-gray-300 p-6 transition-all
+                        duration-500 hover:border-black hover:shadow-sm">
+                        <div>
+                            <p class="text-base text-black leading-6 pb-8 transition-all duration-500 group-hover:text-gray-800">ReVive  made it so easy to sell my old motor battery sprayer. The local buyer picked it up the next day!</p>
+                        </div>
+                        <div class="items-center pt-5 flex gap-5">
+                            <img alt="Akhil image"
+                                src="../media/reviewers/akhil/Akhil.jpg" 
+                                class="object-cover h-20 w-20 rounded-full"/>
+                            <div class="block">
+                                <p class="text-2xl text-gray-900 font-medium mb-1 transition-all duration-500">Akhil Narayanan</p>
+                                <span class="text-base leading-4 text-gray-500">Farmer from Kannur, Kerala</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl w-full mx-auto group border border-solid border-gray-300 p-6 transition-all
+                    duration-500 hover:border-black hover:shadow-sm">
+                    <div>
+                        <p class="text-base text-black leading-6 pb-8 transition-all duration-500 group-hover:text-gray-800">Thanks, ReVive! I bought myself a new headphone I've been eyeing for a while.</p>
+                    </div>
+                    <div class="items-center pt-5 flex gap-5">
+                        <img alt="Arun image"
+                            src="../media/reviewers/Arun/Arun.jpg" 
+                            class="object-cover h-20 w-20 rounded-full"/>
+                        <div class="block">
+                            <p class="text-2xl text-gray-900 font-medium mb-1 transition-all duration-500">Arun J S</p>
+                            <span class="text-base leading-4 text-gray-500">Technical architect Trivandrum, Kerala</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl w-full mx-auto group border border-solid border-gray-300 p-6 transition-all
+                duration-500 hover:border-black hover:shadow-sm">
+                <div>
+                    <p class="text-base text-black leading-6 pb-8 transition-all duration-500 group-hover:text-gray-800">I found some unique vintage pieces that stand out on the runway and in photoshoots. Thanks, ReVive!</p>
+                </div>
+                <div class="items-center pt-5 flex gap-5">
+                    <img alt="Aswini image"
+                        src="../media/reviewers/aswini/aswini.jpg" 
+                        class="object-cover h-20 w-20 rounded-full"/>
+                    <div class="block">
+                        <p class="text-2xl text-gray-900 font-medium mb-1 transition-all duration-500">Aswini</p>
+                        <span class="text-base leading-4 text-gray-500">Top model, Fashion icon of Kerala</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<div class="w-full bg-white pt-20 pr-4 pb-20 pl-4 bg-gradient-to-b from-gray-100 to-white">
+    <div class="w-full mt-0 mr-auto mb-0 ml-auto text-left md:text-center md:w-3/4 lg:w-2/4">
+        <p class="mb-2 text-base font-semibold text-blue-700">Join our community today</p>
+        <p class="mt-0 mr-0 mb-6 ml-0 text-3xl font-extrabold">Start selling pre-owned items</p>
+        <div class="mt-- mr-- mb-0 ml-- space-x-0 md:space-x-2">
+            <div class="bg-blue-700 text-white font-bold pt-2 pr-4 pb-2 pl-4 rounded inline-flex items-center justify-center
+                w-full mb-2 hover:bg-blue-900 sm:w-auto sm:mb-0">
+                <a href="{% url 'seller_signup' %}">
+                <p class="inline-flex">Signup as a Seller</p>
+                </a>
+                <p class="inline-flex w-4 h-4 ml-1">
+                    <svg classname="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillrule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" cliprule="evenodd"/></path>
+                    </svg>
+                </p>
+            </div>
+            <div class="bg-gray-100 text-gray-800 font-bold pt-2 pr-4 pb-2 pl-4 rounded inline-flex items-center
+                justify-center w-full mb-2 hover:bg-gray-200 sm:w-auto sm:mb-0">
+                <a href="{% url 'seller_login' %}">
+                <p class="inline-flex">Login as a Seller</p>
+                </a>
+                <p class="inline-flex w-4 h-4 ml-1">
+                    <svg classname="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillrule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" cliprule="evenodd"/></path>
+                    </svg>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
